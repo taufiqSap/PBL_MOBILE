@@ -1,11 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:dio/dio.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
+
 class _LoginPageState extends State<LoginPage> {
-  
+  // Controller untuk username dan password
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  // API URL
+  final String apiUrl = 'http://localhost/api/login.php';
+
+  Future<void> login() async {
+    try {
+      // Kirim data login ke API
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'username': usernameController.text,
+          'password': passwordController.text,
+        },
+      );
+
+      final responseData = json.decode(response.body);
+
+      if (responseData['success']) {
+        // Periksa level_id dari respons API
+        String role = responseData['role'];
+
+        if (role == 'kaprodi') {
+          Navigator.pushReplacementNamed(context, '/dashboard_kaprodi');
+        } else if (role == 'dosen') {
+          Navigator.pushReplacementNamed(context, '/dashboard_dosen');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Peran tidak dikenali')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseData['message'])),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -19,9 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(width: 20),
             Text(
               'Sistem Informasi Manajemen SDM',
-              style: TextStyle(
-                fontSize: 15,
-              ),
+              style: TextStyle(fontSize: 15),
             ),
           ],
         ),
@@ -42,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 20),
               TextField(
+                controller: usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
                   filled: true,
@@ -53,6 +101,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 20),
               TextField(
+                controller: passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   filled: true,
@@ -65,14 +114,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 20),
               ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/dashboard_dosen');
-                },
+                onPressed: login,
                 icon: Icon(Icons.arrow_right_alt),
                 label: Text('LOGIN'),
                 style: ElevatedButton.styleFrom(
-                  iconColor: Colors.grey[300],
-                  disabledIconColor: Colors.black,
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),

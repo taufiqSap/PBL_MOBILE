@@ -1,83 +1,130 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class ProfileDosen extends StatelessWidget {
+class ProfileDosen extends StatefulWidget {
+  @override
+  _ProfileDosenState createState() => _ProfileDosenState();
+  Future<Map<String, dynamic>?> dosenData(int id) async {
+  final String apiUrl = 'http://localhost/api/dosenData.php?id$id'; 
+
+  try {
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body); 
+    } else {
+      print('Error: ${response.statusCode}');
+      return null;
+    }
+  } catch (error) {
+    print('Error fetching data: $error');
+    return null;
+  }
+}
+
+}
+
+class _ProfileDosenState extends State<ProfileDosen> {
+  Map<String, dynamic>? dosenData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+  final data = await dosenData(1); 
+  setState(() {
+    dosenData = data;
+    isLoading = false;
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Color(0xFF3366CC),
         title: Text('Profile'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), 
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacementNamed(
-                context, '/dashboard_dosen'); 
+            Navigator.pushReplacementNamed(context, '/dashboard_dosen');
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Text(
-                'Profile',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: Icon(
-                      Icons.person,
-                      size: 100,
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : dosenData == null
+              ? Center(child: Text('Data not found'))
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Profile',
+                          style: TextStyle(
+                              fontSize: 32, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 150,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                              ),
+                              child: Icon(
+                                Icons.person,
+                                size: 100,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ProfileDetail(
+                                  label: 'Nama',
+                                  value: dosenData?['nama_lengkap'] ?? 'N/A'),
+                              ProfileDetail(
+                                  label: 'NIDN',
+                                  value: dosenData?['nidn'] ?? 'N/A'),
+                              ProfileDetail(
+                                  label: 'Tanggal Lahir',
+                                  value: dosenData?['tanggal_lahir'] ?? 'N/A'),
+                              ProfileDetail(
+                                  label: 'Alamat',
+                                  value: dosenData?['alamat'] ?? 'N/A'),
+                              ProfileDetail(
+                                  label: 'Email',
+                                  value: dosenData?['email'] ?? 'N/A'),
+                              ProfileDetail(
+                                  label: 'No Telp',
+                                  value: dosenData?['no_telp'] ?? 'N/A'),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Footer(),
+                      ],
                     ),
                   ),
-                  SizedBox(width: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Pilih file'),
-                      ),
-                      Text('Ukuran (max 1MB)'),
-                      Text('Ekstensi (.jpg, .jpeg, .png)'),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ProfileDetail(label: 'Nama', value: 'Lorem ipsum dolor sit amet'),
-                    ProfileDetail(label: 'NIDN', value: 'Lorem ipsum dolor sit amet'),
-                    ProfileDetail(label: 'Tanggal Lahir', value: 'Lorem ipsum dolor sit amet'),
-                    ProfileDetail(label: 'Alamat', value: 'Lorem ipsum dolor sit amet'),
-                    ProfileDetail(label: 'Email', value: 'Lorem ipsum dolor sit amet'),
-                    ProfileDetail(label: 'No Telp', value: 'Lorem ipsum dolor sit amet'),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Footer(),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

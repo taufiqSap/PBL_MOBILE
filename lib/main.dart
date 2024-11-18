@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/dasboard.dart';
-import 'package:flutter_application_1/dasboard_profile.dart';
+import 'package:flutter_application_1/dasboard_kaprodi.dart';
+import 'package:flutter_application_1/profile_kaprodi.dart';
 import 'package:flutter_application_1/login_page.dart';
-import 'package:flutter_application_1/dasboard.dart';
-import 'package:flutter_application_1/dasboard_profile.dart';
+import 'package:flutter_application_1/dasboard_kaprodi.dart';
+import 'package:flutter_application_1/profile_kaprodi.dart';
 import 'package:flutter_application_1/detail_kegiatan.dart';
 import 'package:flutter_application_1/penilaian.dart';
 import 'package:flutter_application_1/poin.dart';
@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
       home: LoginPage(),
       routes: {
         '/login_page': (context) => LoginPage(),
-        '/dashboard': (context) => Dashboard(),
-        '/profile': (context) => DasboardProfile(),
+        '/dashboard_kaprodi': (context) => DasboardKaprodi(),
+        '/profile': (context) => ProfileKaprodi(),
         '/detail': (context) => DetailKegiatan(),
         '/penilaian': (context) => Penilaian(),
         '/poin': (context) => Poin(),

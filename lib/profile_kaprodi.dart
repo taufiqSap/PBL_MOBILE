@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 
-class DasboardProfile extends StatelessWidget {
+class ProfileKaprodi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,8 +11,7 @@ class DasboardProfile extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back), 
           onPressed: () {
-           Navigator.pushReplacementNamed(
-                context, '/dashboard');
+            Navigator.pushReplacementNamed(context, '/dashboard');
           },
         ),
       ),
@@ -61,29 +60,25 @@ class DasboardProfile extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    'Nama: Lorem ipsum dolor sit amet',
-                    style: TextStyle(fontSize: 18),
+                  ProfileInfo(
+                    title: 'Nama',
+                    value: 'Lorem ipsum dolor sit amet',
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Telepon: Lorem ipsum dolor sit amet',
-                    style: TextStyle(fontSize: 18),
+                  ProfileInfo(
+                    title: 'Telepon',
+                    value: 'Lorem ipsum dolor sit amet',
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Unit Kerja: Lorem ipsum dolor sit amet',
-                    style: TextStyle(fontSize: 18),
+                  ProfileInfo(
+                    title: 'Unit Kerja',
+                    value: 'Lorem ipsum dolor sit amet',
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Alamat Unit Kerja: Lorem ipsum dolor sit amet',
-                    style: TextStyle(fontSize: 18),
+                  ProfileInfo(
+                    title: 'Alamat Unit Kerja',
+                    value: 'Lorem ipsum dolor sit amet',
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Pendidikan: Lorem ipsum dolor sit amet',
-                    style: TextStyle(fontSize: 18),
+                  ProfileInfo(
+                    title: 'Pendidikan',
+                    value: 'Lorem ipsum dolor sit amet',
                   ),
                 ],
               ),
@@ -92,6 +87,31 @@ class DasboardProfile extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Footer(), 
+    );
+  }
+}
+
+class ProfileInfo extends StatelessWidget {
+  final String title;
+  final String value;
+
+  ProfileInfo({required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 5),
+        Text(
+          value,
+          style: TextStyle(fontSize: 18),
+        ),
+        SizedBox(height: 10),
+      ],
     );
   }
 }
@@ -150,4 +170,3 @@ class Footer extends StatelessWidget {
     );
   }
 }
-
