@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/screens/login_screen.dart';
 import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-import 'package:flutter_application_4/screens/update_progress.dart';
 import 'package:flutter_application_4/widgets/agenda_card.dart';
 import 'package:flutter_application_4/widgets/footer.dart';
 
@@ -32,7 +31,7 @@ class ProgressListPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context)=> LoginScreen()),
+                MaterialPageRoute(builder: (context) =>  LoginScreen()),
               );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
@@ -47,25 +46,15 @@ class ProgressListPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const UpdateProgressPage()),
-                    );
-                  },
-                  child: const Text(
-                    'Form Update',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
+                // Hanya tombol "Daftar Progress"
                 TextButton(
                   onPressed: () {},
                   child: const Text(
-                    'Daftar Progress',
+                    'Daftar Progress Agenda',
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],

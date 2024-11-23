@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/screens/agenda_nonjti.dart';
 import 'package:flutter_application_4/screens/dashboard_dosen_screen.dart';
-import 'package:flutter_application_4/screens/progress_screen.dart';
+import 'package:flutter_application_4/buangan/progress_screen.dart';
 import 'package:flutter_application_4/screens/list_progress_agenda.dart';
 import 'package:flutter_application_4/screens/update_progress.dart';
 
@@ -20,11 +21,11 @@ class Footer extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => DashboardDosenScreen()),
                   );
                 },
               ),
-             
               const Text('Home', style: TextStyle(fontSize: 5)),
             ],
           ),
@@ -35,12 +36,11 @@ class Footer extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProgressScreen()),
+                    MaterialPageRoute(builder: (context) => ProgressListPage()),
                   );
                   // Navigasi ke Progress Kegiatan
                 },
               ),
-             
               const Text('Progress', style: TextStyle(fontSize: 5)),
             ],
           ),
@@ -51,12 +51,12 @@ class Footer extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UpdateProgressPage()),
+                    MaterialPageRoute(
+                        builder: (context) => UpdateProgressPage()),
                   );
                   // Navigasi ke Update Agenda
                 },
               ),
-             
               const Text('Update', style: TextStyle(fontSize: 5)),
             ],
           ),
@@ -65,10 +65,12 @@ class Footer extends StatelessWidget {
               IconButton(
                 icon: Image.asset('assets/icons/nonjti.png', height: 24),
                 onPressed: () {
-                  // Navigasi ke Non JTI
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AgendaNonjti()),
+                  );
                 },
               ),
-           
               const Text('Non JTI', style: TextStyle(fontSize: 5)),
             ],
           ),
