@@ -34,11 +34,24 @@ class LoginScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'User',
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Level',
                   border: OutlineInputBorder(),
                 ),
+                items: const [
+                  DropdownMenuItem(
+                    value: 'dosen',
+                    child: Text('Dosen'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'kaprodi',
+                    child: Text('Kaprodi'),
+                  ),
+                ],
+                onChanged: (value) {
+                  // Handle change level
+                },
               ),
               const SizedBox(height: 20),
               const TextField(
@@ -60,7 +73,7 @@ class LoginScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DashboardDosenScreen())
+                    MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
                   );
                 },
                 child: Row(
