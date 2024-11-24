@@ -39,26 +39,28 @@ class AgendaNonjti extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Tab selector
-            Container(
-              color: Colors.blue[200],
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () {}, // Tetap di Input Kegiatan
+      body: Column(
+        children: [
+          // Tab selector
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 144, 202, 249), // Background warna sama
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {}, 
                     child: const Text(
                       'Input Kegiatan',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  TextButton(
+                ),
+                Expanded(
+                  child: TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -69,84 +71,128 @@ class AgendaNonjti extends StatelessWidget {
                     },
                     child: const Text(
                       'Riwayat',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Form input
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 197, 197, 197),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan Nama Kegiatan',
+                        labelText: 'Nama Kegiatan',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 197, 197, 197),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'dd/mm/yyyy',
+                        labelText: 'Tanggal Mulai',
+                        border: InputBorder.none,
+                        suffixIcon: Icon(Icons.calendar_today),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+                      ),
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (pickedDate != null) {
+                          // Logika untuk menangkap tanggal
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 197, 197, 197),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'dd/mm/yyyy',
+                        labelText: 'Tanggal Selesai',
+                        border: InputBorder.none,
+                        suffixIcon: Icon(Icons.calendar_today),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+                      ),
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (pickedDate != null) {
+                          // Logika untuk menangkap tanggal
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 197, 197, 197),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan PIC Kegiatan',
+                        labelText: 'PIC Kegiatan',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Simpan logika kegiatan
+                      },
+                      child: const Text('Simpan Kegiatan'),
                     ),
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Form input
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Masukkan Nama Kegiatan',
-                labelText: 'Nama Kegiatan',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'dd/mm/yyyy',
-                labelText: 'Tanggal Mulai',
-                border: OutlineInputBorder(),
-                suffixIcon: Icon(Icons.calendar_today),
-              ),
-              readOnly: true,
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                );
-                if (pickedDate != null) {
-                  // Logika untuk menangkap tanggal
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'dd/mm/yyyy',
-                labelText: 'Tanggal Selesai',
-                border: OutlineInputBorder(),
-                suffixIcon: Icon(Icons.calendar_today),
-              ),
-              readOnly: true,
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2101),
-                );
-                if (pickedDate != null) {
-                  // Logika untuk menangkap tanggal
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Masukkan PIC Kegiatan',
-                labelText: 'PIC Kegiatan',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Simpan logika kegiatan
-                },
-                child: const Text('Simpan Kegiatan'),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: const Footer(),
     );

@@ -47,6 +47,7 @@ class RiwayatScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                  SizedBox(width: 45),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -58,9 +59,11 @@ class RiwayatScreen extends StatelessWidget {
                   },
                   child: const Text(
                     'Input Kegiatan',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 ),
+                const SizedBox(width: 110),
                 TextButton(
                   onPressed: () {}, // Tetap di Riwayat
                   child: const Text(
@@ -76,15 +79,20 @@ class RiwayatScreen extends StatelessWidget {
           // Kotak pencarian
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Cari Kegiatan",
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 197, 197, 197),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: const TextField(
+                decoration: InputDecoration(
+                  hintText: "Cari Kegiatan",
+                  prefixIcon: Icon(Icons.search),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
                 ),
-                filled: true,
-                fillColor: Colors.grey[200],
               ),
             ),
           ),
@@ -122,7 +130,8 @@ class RiwayatScreen extends StatelessWidget {
   }
 
   // Widget untuk membuat card kegiatan
-  Widget buildKegiatanCard(String title, String startDate, String endDate, String pic) {
+  Widget buildKegiatanCard(
+      String title, String startDate, String endDate, String pic) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
       padding: const EdgeInsets.all(16.0),
