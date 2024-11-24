@@ -11,7 +11,8 @@ import 'package:flutter_application_4/screens/update_progress.dart';
 import 'package:flutter_application_4/screens/riwayat_agenda.dart';
 import 'package:flutter_application_4/screens/dashboard_kaprodi_screen.dart';
 import 'package:flutter_application_4/screens/edit_profile_kaprodi_screen.dart';
-
+import 'package:flutter_application_4/screens/activity_list_screen.dart';
+import 'package:flutter_application_4/screens/download_document_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,8 +37,10 @@ class MyApp extends StatelessWidget {
         '/update': (context) => UpdateProgressPage(),
         '/nonjti_agenda': (context) => AgendaNonjti(),
         '/riwatat_nonjti': (context) => RiwayatNonjti(),
-        '/riwayay_agenda' : (context) => RiwayatAgenda(),
+        '/riwayay_agenda': (context) => RiwayatAgenda(),
         '/dashboard_kaprodi': (context) => DashboardKaprodiScreen(),
+        '/activity' : (context) => ActivityListScreen(),
+        '/download_document': (context) => DownloadDocumentsScreen(),
       },
     );
   }
