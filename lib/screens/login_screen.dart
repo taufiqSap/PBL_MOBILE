@@ -1,8 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/screens/dashboard_dosen_screen.dart';
+import 'package:flutter_application_4/screens/dashboard_kaprodi_screen.dart';
+import 'package:flutter_application_4/services/api_login.dart';
 import 'package:flutter_application_4/widgets/footer_login.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String? _selectedLevel;
+  bool _isLoading = false;
+  final ApiLogin _apiService = ApiLogin();
+
+  void _login() async {
+  if (_selectedLevel == null || _usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Semua field wajib diisi')),
+    );
+    return;
+  }
+
+  setState(() {
+    _isLoading = true;
+  });
+
+  final response = await _apiService.login(
+    _usernameController.text,
+    _passwordController.text,
+    _selectedLevel!,
+  );
+
+  setState(() {
+    _isLoading = false;
+  });
+
+  if (response['success']) {
+    // Redirect pengguna berdasarkan level
+    if (_selectedLevel == '1') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
+      );
+    } else if (_selectedLevel == '2') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardKaprodiScreen()),
+      );
+    }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(response['message'] ?? 'Login gagal')),
+    );
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,8 +70,8 @@ class LoginScreen extends StatelessWidget {
               'https://upload.wikimedia.org/wikipedia/id/4/4a/Logo_Politeknik_Negeri_Malang.png',
               height: 50,
             ),
-            SizedBox(width: 20),
-            Text(
+            const SizedBox(width: 20),
+            const Text(
               'Sistem Informasi Manajemen SDM',
               style: TextStyle(fontSize: 15),
             ),
@@ -40,51 +96,46 @@ class LoginScreen extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
                 items: const [
-                  DropdownMenuItem(
-                    value: 'dosen',
-                    child: Text('Dosen'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'kaprodi',
-                    child: Text('Kaprodi'),
-                  ),
+                  DropdownMenuItem(value: '1', child: Text('Dosen')),
+                  DropdownMenuItem(value: '2', child: Text('Kaprodi')),
                 ],
                 onChanged: (value) {
-                  // Handle change level
+                  setState(() {
+                    _selectedLevel = value;
+                  });
                 },
               ),
               const SizedBox(height: 20),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
                   labelText: 'Username',
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20),
-              const TextField(
+              TextField(
+                controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
-                  );
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Text('LOGIN'),
-                    SizedBox(width: 5),
-                    Icon(Icons.login),
-                  ],
-                ),
-              ),
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _login,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Text('LOGIN'),
+                          SizedBox(width: 5),
+                          Icon(Icons.login),
+                        ],
+                      ),
+                    ),
             ],
           ),
         ),
