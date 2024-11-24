@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/screens/login_screen.dart';
 import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
+import 'package:flutter_application_4/screens/riwayat_agenda.dart';
 import 'package:flutter_application_4/widgets/agenda_card.dart';
 import 'package:flutter_application_4/widgets/footer.dart';
 
-class ProgressListPage extends StatelessWidget {
-  const ProgressListPage({super.key});
+class ListProgressAgenda extends StatelessWidget {
+  const ListProgressAgenda({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class ProgressListPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  LoginScreen()),
+                MaterialPageRoute(builder: (context) => LoginScreen()),
               );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
@@ -51,6 +52,22 @@ class ProgressListPage extends StatelessWidget {
                   onPressed: () {},
                   child: const Text(
                     'Daftar Progress Agenda',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 80),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RiwayatAgenda()),
+                    );
+                  },
+                  child: const Text(
+                    'Riwayat Agenda',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

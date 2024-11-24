@@ -65,7 +65,7 @@ class AgendaNonjti extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RiwayatScreen(),
+                          builder: (context) => RiwayatNonjti(),
                         ),
                       );
                     },

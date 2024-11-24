@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/agenda_nonjti.dart';
+import 'package:flutter_application_4/screens/list_progress_agenda.dart';
 import 'package:flutter_application_4/screens/login_screen.dart';
 import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
+import 'package:flutter_application_4/widgets/agenda_card.dart';
 import 'package:flutter_application_4/widgets/footer.dart';
 
-class RiwayatNonjti extends StatelessWidget {
+class RiwayatAgenda extends StatelessWidget {
+  const RiwayatAgenda({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +23,7 @@ class RiwayatNonjti extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProfileDosenScreen(),
-                ),
+                    builder: (context) => const ProfileDosenScreen()),
               );
             },
             child: const Text('PROFILE', style: TextStyle(color: Colors.white)),
@@ -30,9 +32,7 @@ class RiwayatNonjti extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => LoginScreen()),
               );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
@@ -47,58 +47,56 @@ class RiwayatNonjti extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                  SizedBox(width: 45),
+                // Hanya tombol "Daftar Progress"
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AgendaNonjti(),
-                      ),
+                          builder: (context) => ListProgressAgenda()),
                     );
                   },
                   child: const Text(
-                    'Input Kegiatan',
+                    'Daftar Progress Agenda',
                     style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const SizedBox(width: 110),
+                SizedBox(width: 80),
                 TextButton(
-                  onPressed: () {}, // Tetap di Riwayat
+                  onPressed: () {},
                   child: const Text(
-                    'Riwayat',
+                    'Riwayat Agenda',
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
 
-          // Kotak pencarian
+          // Search Bar
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 197, 197, 197),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  hintText: "Cari Kegiatan",
-                  prefixIcon: Icon(Icons.search),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Cari Riwayat',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                filled: true,
+                fillColor: Colors.grey[200],
               ),
             ),
           ),
 
-          // Daftar kegiatan
-          Expanded(
+          // List of Agenda Cards
+           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: [
@@ -125,12 +123,11 @@ class RiwayatNonjti extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: const Footer(),
+      bottomNavigationBar: Footer(),
     );
   }
-
-  // Widget untuk membuat card kegiatan
-  Widget buildKegiatanCard(
+}
+Widget buildKegiatanCard(
       String title, String startDate, String endDate, String pic) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
@@ -174,4 +171,5 @@ class RiwayatNonjti extends StatelessWidget {
       ),
     );
   }
-}
+
+

@@ -35,7 +35,7 @@ class Footer extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProgressListPage()),
+                    MaterialPageRoute(builder: (context) => ListProgressAgenda()),
                   );
                   // Navigasi ke Progress Kegiatan
                 },
