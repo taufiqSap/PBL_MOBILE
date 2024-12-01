@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   if (response['success']) {
     // Redirect pengguna berdasarkan level
-    if (_selectedLevel == '1') {
+    if (_selectedLevel == '3') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(),
                 ),
                 items: const [
-                  DropdownMenuItem(value: '1', child: Text('Dosen')),
+                  DropdownMenuItem(value: '3', child: Text('Dosen')),
                   DropdownMenuItem(value: '2', child: Text('Kaprodi')),
                 ],
                 onChanged: (value) {

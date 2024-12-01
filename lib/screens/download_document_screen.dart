@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_4/widgets/footer.dart';
-import '../widgets/footer.dart';
 import '../widgets/prevent_overflow_widget.dart';
 
 class DownloadDocumentsScreen extends StatelessWidget {

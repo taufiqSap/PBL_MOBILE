@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_4/screens/edit_profile_dosen_screen.dart';
 import 'package:flutter_application_4/screens/login_screen.dart';
 import 'package:flutter_application_4/widgets/footer.dart';
-import 'package:flutter_application_4/screens/edit_profile_dosen_screen.dart';
 
 class ProfileDosenScreen extends StatelessWidget {
   const ProfileDosenScreen({Key? key}) : super(key: key);
