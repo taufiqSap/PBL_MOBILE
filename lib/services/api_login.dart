@@ -35,6 +35,7 @@ class ApiLogin {
         if (data['success']) {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', data['token']);
+          print('Token berhasil disimpan: ${data['token']}');
           
           return {
             'success': true,

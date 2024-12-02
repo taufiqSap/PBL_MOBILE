@@ -1,22 +1,19 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ApiDashboard {
-  static const String baseUrl = 'http://192.168.100.12:8000/api/v1/dosen/dashboard';
+class ApiProfile {
+  static const String baseUrl = 'http://192.168.100.12:8000/api/v1/profile';
 
-  Future<Map<String, dynamic>> fetchDashboardData() async {
+  Future<Map<String, dynamic>> fetchProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    print('Token yang ditemukan di SharedPreferences: $token');
 
     if (token == null) {
       return {'success': false, 'message': 'Token tidak ditemukan. Silakan login kembali.'};
     }
 
     try {
-      print('Token yang dikirim: $token');
-
       final response = await http.get(
         Uri.parse(baseUrl),
         headers: {
@@ -25,12 +22,9 @@ class ApiDashboard {
         },
       );
 
-      print('Response status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return {'success': true, 'data': data['data']};
+        return {'success': true, 'data': data['user']};
       } else {
         return {'success': false, 'message': 'Server error: ${response.statusCode}'};
       }
