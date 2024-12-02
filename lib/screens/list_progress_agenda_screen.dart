@@ -1,12 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_4/services/api_progress_kegiatan_service.dart';
 import 'package:flutter_application_4/screens/login_screen.dart';
 import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-import 'package:flutter_application_4/screens/riwayat_agenda.dart';
 import 'package:flutter_application_4/widgets/agenda_card.dart';
 import 'package:flutter_application_4/widgets/footer.dart';
 
-class ListProgressAgenda extends StatelessWidget {
-  const ListProgressAgenda({super.key});
+class ListProgressAgenda extends StatefulWidget {
+  final String token; // Token for authentication
+
+  const ListProgressAgenda({super.key, required this.token});
+
+  @override
+  State<ListProgressAgenda> createState() => _ListProgressAgendaState();
+}
+
+class _ListProgressAgendaState extends State<ListProgressAgenda> {
+  late ProgressKegiatanService progressKegiatanService; // Service instance
+  List<dynamic> _progressList = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    progressKegiatanService = ProgressKegiatanService(widget.token); // Initialize service with token
+    _loadProgressData(); // Load progress data
+  }
+
+  Future<void> _loadProgressData() async {
+    try {
+      final progressData = await progressKegiatanService.fetchProgress(); // Correct service call
+      setState(() {
+        _progressList = progressData; // Update progress list
+        _isLoading = false; // Set loading to false
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false; // Set loading to false on error
+      });
+      print("Error fetching progress data: $e");
+      // Optionally, show an error message to the user
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +56,7 @@ class ListProgressAgenda extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const ProfileDosenScreen()),
+                MaterialPageRoute(builder: (context) => const ProfileDosenScreen()),
               );
             },
             child: const Text('PROFILE', style: TextStyle(color: Colors.white)),
@@ -47,27 +80,10 @@ class ListProgressAgenda extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Hanya tombol "Daftar Progress"
                 TextButton(
                   onPressed: () {},
                   child: const Text(
                     'Daftar Progress Agenda',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 80),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RiwayatAgenda()),
-                    );
-                  },
-                  child: const Text(
-                    'Riwayat Agenda',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -96,41 +112,27 @@ class ListProgressAgenda extends StatelessWidget {
 
           // List of Agenda Cards
           Expanded(
-            child: ListView(
-              children: const [
-                AgendaCard(
-                  title: 'Seminar Akademik',
-                  subtitle: 'Basic Programmer',
-                  progress: 100,
-                  date: '20/4/2024',
-                  fileName: 'DOC-001.pdf',
-                  status: 'Selesai',
-                  statusColor: Colors.green,
-                ),
-                AgendaCard(
-                  title: 'Workshop Flutter',
-                  subtitle: 'Basic Flutter UI',
-                  progress: 50,
-                  date: '21/4/2024',
-                  fileName: 'DWSC-002.pdf',
-                  status: 'Sedang Berlangsung',
-                  statusColor: Colors.orange,
-                ),
-                AgendaCard(
-                  title: 'Seminar Akademik',
-                  subtitle: 'Basic Programmer',
-                  progress: 100,
-                  date: '20/4/2024',
-                  fileName: 'DOC-001.pdf',
-                  status: 'Selesai',
-                  statusColor: Colors.green,
-                ),
-              ],
-            ),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: _progressList.length,
+                    itemBuilder: (context, index) {
+                      final item = _progressList[index];
+                      return AgendaCard(
+                        title: item['nama_kegiatan'],
+                        subtitle: item['jenis_kegiatan'],
+                        progress: item['progress_percentage'],
+                        date: "${item['tanggal_mulai']} - ${item['tanggal_selesai']}",
+                        fileName: '',
+                        status: item['progress_percentage'] == 100 ? 'Selesai' : 'Sedang Berlangsung',
+                        statusColor: item['progress_percentage'] == 100 ? Colors.green : Colors.orange,
+                      );
+                    },
+                  ),
           ),
         ],
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: const Footer(),
     );
   }
 }
