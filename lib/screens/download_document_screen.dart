@@ -1,69 +1,145 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/services/api_dokumen_service.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
+import '../widgets/prevent_overflow_widget.dart';
 
-class DownloadDocumentsScreen extends StatefulWidget {
-  final String token;
-
-  const DownloadDocumentsScreen({Key? key, required this.token}) : super(key: key);
-
-  @override
-  State<DownloadDocumentsScreen> createState() => _DownloadDocumentsScreenState();
-}
-
-class _DownloadDocumentsScreenState extends State<DownloadDocumentsScreen> {
-  late ApiDokumenService apiDokumenService;
-  List<dynamic> agendaList = [];
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    apiDokumenService = ApiDokumenService(
-      baseUrl: 'http://your-laravel-server.com/api',
-      token: widget.token,
-    );
-    loadAgenda();
-  }
-
-  Future<void> loadAgenda() async {
-    try {
-      final data = await apiDokumenService.getAgendaList();
-      setState(() {
-        agendaList = data;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      print("Error loading agenda: $e");
-    }
-  }
+class DownloadDocumentsScreen extends StatelessWidget {
+  const DownloadDocumentsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Download Dokumen')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: agendaList.length,
-              itemBuilder: (context, index) {
-                final agenda = agendaList[index];
-                return ListTile(
-                  title: Text(agenda['nama_agenda']),
-                  subtitle: Text("Tanggal: ${agenda['tanggal_agenda']}"),
-                  trailing: agenda['has_dokumentasi']
-                      ? ElevatedButton(
-                          onPressed: () {
-                            // Logika unduh dokumen
-                          },
-                          child: const Text('Unduh'),
-                        )
-                      : const Text('Belum Ada Dokumentasi'),
-                );
+    return PreventOverflowWidget(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "POLINEMA",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 1,
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text("PROFILE"),
             ),
+            const SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: () {
+                // Logika logout
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text("LOGOUT"),
+            ),
+            const SizedBox(width: 10),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: Text(
+                    "Download Dokumen",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Cari Surat Tugas",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Aksi pencarian
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[300],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Icon(Icons.search, color: Colors.black),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 6)],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.insert_drive_file, size: 30),
+                          SizedBox(width: 10),
+                          Text(
+                            "Seminar Akademik",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Row(
+                        children: [
+                          Icon(Icons.calendar_today, size: 20),
+                          SizedBox(width: 10),
+                          Text("20-6-2029"),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          // Aksi unduh dokumen
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        icon: const Icon(Icons.download, color: Colors.white),
+                        label: const Text("Unduh Dokumen", style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: const Footer(),
+      ),
     );
   }
 }

@@ -1,45 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/services/api_progress_kegiatan_service.dart';
-import 'package:flutter_application_4/screens/login_screen.dart';
-import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-import 'package:flutter_application_4/widgets/agenda_card.dart';
-import 'package:flutter_application_4/widgets/footer.dart';
+import '../services/agenda_service.dart'; // Tambahkan layanan API
+import '../widgets/agenda_card.dart';
+import '../widgets/footer.dart';
 
 class ListProgressAgenda extends StatefulWidget {
-  final String token; // Token for authentication
-
-  const ListProgressAgenda({super.key, required this.token});
+  const ListProgressAgenda({super.key});
 
   @override
-  State<ListProgressAgenda> createState() => _ListProgressAgendaState();
+  _ListProgressAgendaState createState() => _ListProgressAgendaState();
 }
 
 class _ListProgressAgendaState extends State<ListProgressAgenda> {
-  late ProgressKegiatanService progressKegiatanService; // Service instance
-  List<dynamic> _progressList = [];
-  bool _isLoading = true;
+  final AgendaService _agendaService = AgendaService(baseUrl: 'http://192.168.1.8:8000/api');
+  late Future<List<dynamic>> _agendas;
+  final String _authToken = 'YOUR_AUTH_TOKEN'; // Ganti dengan token aktual
 
   @override
   void initState() {
     super.initState();
-    progressKegiatanService = ProgressKegiatanService(widget.token); // Initialize service with token
-    _loadProgressData(); // Load progress data
+    _fetchAgendas(); // Memuat data awal
   }
 
-  Future<void> _loadProgressData() async {
-    try {
-      final progressData = await progressKegiatanService.fetchProgress(); // Correct service call
-      setState(() {
-        _progressList = progressData; // Update progress list
-        _isLoading = false; // Set loading to false
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false; // Set loading to false on error
-      });
-      print("Error fetching progress data: $e");
-      // Optionally, show an error message to the user
-    }
+  void _fetchAgendas() {
+    setState(() {
+      _agendas = _agendaService.getActiveAgendas(_authToken);
+    });
   }
 
   @override
@@ -54,19 +39,13 @@ class _ListProgressAgendaState extends State<ListProgressAgenda> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileDosenScreen()),
-              );
+              // Navigasi ke halaman profil dosen
             },
             child: const Text('PROFILE', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
+              // Navigasi ke halaman login
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
           ),
@@ -81,9 +60,24 @@ class _ListProgressAgendaState extends State<ListProgressAgenda> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _fetchAgendas(); // Memuat ulang daftar agenda
+                  },
                   child: const Text(
                     'Daftar Progress Agenda',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 80),
+                TextButton(
+                  onPressed: () {
+                    // Navigasi ke riwayat agenda
+                  },
+                  child: const Text(
+                    'Riwayat Agenda',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -107,28 +101,43 @@ class _ListProgressAgendaState extends State<ListProgressAgenda> {
                 filled: true,
                 fillColor: Colors.grey[200],
               ),
+              onChanged: (value) {
+                // Tambahkan fitur pencarian jika diperlukan
+              },
             ),
           ),
 
-          // List of Agenda Cards
+          // Daftar Agenda
           Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: _progressList.length,
-                    itemBuilder: (context, index) {
-                      final item = _progressList[index];
-                      return AgendaCard(
-                        title: item['nama_kegiatan'],
-                        subtitle: item['jenis_kegiatan'],
-                        progress: item['progress_percentage'],
-                        date: "${item['tanggal_mulai']} - ${item['tanggal_selesai']}",
-                        fileName: '',
-                        status: item['progress_percentage'] == 100 ? 'Selesai' : 'Sedang Berlangsung',
-                        statusColor: item['progress_percentage'] == 100 ? Colors.green : Colors.orange,
-                      );
-                    },
-                  ),
+            child: FutureBuilder<List<dynamic>>(
+              future: _agendas,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('Tidak ada agenda.'));
+                }
+
+                final agendas = snapshot.data!;
+                return ListView.builder(
+                  itemCount: agendas.length,
+                  itemBuilder: (context, index) {
+                    final agenda = agendas[index];
+                    return AgendaCard(
+                      title: agenda['nama_kegiatan'],
+                      subtitle: agenda['deskripsi'],
+                      progress: 100, // Atur progress sesuai data Anda
+                      date: agenda['tanggal_mulai'],
+                      fileName: agenda['file_surat'] ?? 'Tidak ada file',
+                      status: 'Berlangsung',
+                      statusColor: Colors.orange,
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),

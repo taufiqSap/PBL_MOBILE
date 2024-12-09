@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/list_progress_agenda_screen.dart';
-import 'package:flutter_application_4/screens/login_screen.dart';
-import 'package:flutter_application_4/screens/profile_dosen_screen.dart';
-import 'package:flutter_application_4/widgets/agenda_card.dart';
-import 'package:flutter_application_4/widgets/footer.dart';
+import 'package:mobile_pbl/services/agenda_service.dart';
+import '../widgets/footer.dart';
 
-class RiwayatAgenda extends StatelessWidget {
+class RiwayatAgenda extends StatefulWidget {
   const RiwayatAgenda({super.key});
+
+  @override
+  State<RiwayatAgenda> createState() => _RiwayatAgendaState();
+}
+
+class _RiwayatAgendaState extends State<RiwayatAgenda> {
+  final AgendaService _agendaService =
+      AgendaService(baseUrl: 'http://192.168.1.114:8000/api/riwayat-agenda');
+  late Future<List<dynamic>> _completedAgendas;
+  final String _authToken = 'YOUR_AUTH_TOKEN'; // Ganti dengan token aktual
+
+  @override
+  void initState() {
+    super.initState();
+    _completedAgendas = _agendaService.getCompletedAgendas(_authToken);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,20 +33,13 @@ class RiwayatAgenda extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ProfileDosenScreen()),
-              );
+              // Navigasi ke halaman profil
             },
             child: const Text('PROFILE', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
+              // Navigasi ke halaman login
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
           ),
@@ -41,20 +47,14 @@ class RiwayatAgenda extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Tab selector
           Container(
             color: Colors.blue[200],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // Hanya tombol "Daftar Progress"
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ListProgressAgenda()),
-                    );
+                    Navigator.pop(context);
                   },
                   child: const Text(
                     'Daftar Progress Agenda',
@@ -64,7 +64,7 @@ class RiwayatAgenda extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 80),
+                const SizedBox(width: 80),
                 TextButton(
                   onPressed: () {},
                   child: const Text(
@@ -78,56 +78,42 @@ class RiwayatAgenda extends StatelessWidget {
               ],
             ),
           ),
+          Expanded(
+            child: FutureBuilder<List<dynamic>>(
+              future: _completedAgendas,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('Tidak ada agenda selesai.'));
+                }
 
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Cari Riwayat',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                filled: true,
-                fillColor: Colors.grey[200],
-              ),
-            ),
-          ),
-
-          // List of Agenda Cards
-           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              children: [
-                buildKegiatanCard(
-                  "Seminar Akademik",
-                  "20/4/2024",
-                  "22/4/2024",
-                  "Drs. Andi",
-                ),
-                buildKegiatanCard(
-                  "Workshop",
-                  "20/4/2024",
-                  "22/4/2024",
-                  "Drs. Andi",
-                ),
-                buildKegiatanCard(
-                  "Rapat Paripurna",
-                  "20/4/2024",
-                  "22/4/2024",
-                  "Drs. Andi",
-                ),
-              ],
+                final agendas = snapshot.data!;
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  itemCount: agendas.length,
+                  itemBuilder: (context, index) {
+                    final agenda = agendas[index];
+                    return buildKegiatanCard(
+                      agenda['nama_kegiatan'],
+                      agenda['tanggal_mulai'],
+                      agenda['tanggal_selesai'],
+                      agenda['pic'] ?? 'Tidak ada PIC',
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: const Footer(),
     );
   }
-}
-Widget buildKegiatanCard(
+
+  Widget buildKegiatanCard(
       String title, String startDate, String endDate, String pic) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
@@ -171,5 +157,4 @@ Widget buildKegiatanCard(
       ),
     );
   }
-
-
+}

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_4/screens/dashboard_dosen_screen.dart';
-import 'package:flutter_application_4/screens/dashboard_kaprodi_screen.dart';
-import 'package:flutter_application_4/services/api_login.dart';
-import 'package:flutter_application_4/widgets/footer_login.dart';
+import '../screens/dashboard_dosen_screen.dart';
+import '../screens/dashboard_kaprodi_screen.dart';
+import '../services/api_login.dart';
+import '../widgets/footer_login.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -43,12 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_selectedLevel == '3') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DashboardDosenScreen()),
+        MaterialPageRoute(builder: (context) => const DashboardDosenScreen()),
       );
     } else if (_selectedLevel == '2') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => DashboardKaprodiScreen()),
+        MaterialPageRoute(builder: (context) => const DashboardKaprodiScreen()),
       );
     }
   } else {
@@ -63,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF3366CC),
+        backgroundColor: const Color(0xFF3366CC),
         title: Row(
           children: [
             Image.network(
@@ -124,12 +126,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
               _isLoading
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : ElevatedButton(
                       onPressed: _login,
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Text('LOGIN'),
                           SizedBox(width: 5),
                           Icon(Icons.login),
@@ -140,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: FooterLogin(),
+      bottomNavigationBar: const FooterLogin(),
     );
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../screens/dashboard_dosen_screen.dart';
-import '../screens/list_progress_agenda_screen.dart';
-import '../screens/update_progress.dart';
+import 'package:mobile_pbl/screens/dashboard_dosen_screen.dart';
+import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
+import 'package:mobile_pbl/screens/update_progress.dart';
 
-class Footer extends StatelessWidget {
-  const Footer({super.key});
+class FooterKaprodi extends StatelessWidget {
+  const FooterKaprodi({super.key});
 
   @override
   Widget build(BuildContext context) {

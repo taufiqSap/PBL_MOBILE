@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
   final Dio dio = Dio(BaseOptions(
-    baseUrl: 'http://192.168.100.12:8000/api/v1', // Ganti dengan URL Laravel Anda
-    connectTimeout: Duration(seconds: 10),
-    receiveTimeout: Duration(seconds: 10),
+    baseUrl: 'http://192.168.1.114:8000/api/v1/login', // Ganti dengan URL Laravel Anda
+    connectTimeout: const Duration(seconds: 10),
+    receiveTimeout: const Duration(seconds: 10),
   ));
 
   ApiClient() {
@@ -26,7 +26,7 @@ class ApiClient {
     print('Response Data: ${response.data}');
     return handler.next(response);
   },
-  onError: (DioError e, handler) {
+  onError: (DioException e, handler) {
     print('Error: ${e.message}');
     print('Error Response: ${e.response?.data}');
     print('Error Stack Trace: ${e.stackTrace}');
