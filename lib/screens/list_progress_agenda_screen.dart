@@ -1,34 +1,60 @@
 import 'package:flutter/material.dart';
-import '../services/agenda_service.dart'; // Tambahkan layanan API
-import '../widgets/agenda_card.dart';
-import '../widgets/footer.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/riwayat_agenda.dart';
+import 'package:mobile_pbl/services/agenda_service.dart';
+import 'package:mobile_pbl/widgets/agenda_card.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
 
 class ListProgressAgenda extends StatefulWidget {
   const ListProgressAgenda({super.key});
 
   @override
-  _ListProgressAgendaState createState() => _ListProgressAgendaState();
+  State<ListProgressAgenda> createState() => _ListProgressAgendaState();
 }
 
 class _ListProgressAgendaState extends State<ListProgressAgenda> {
-  final AgendaService _agendaService = AgendaService(baseUrl: 'http://192.168.1.8:8000/api');
-  late Future<List<dynamic>> _agendas;
-  final String _authToken = 'YOUR_AUTH_TOKEN'; // Ganti dengan token aktual
-
+  final AgendaService _agendaService = AgendaService();
+  List<dynamic> _agendas = [];
+  bool _isLoading = true;
+  String _error = '';
   @override
   void initState() {
     super.initState();
-    _fetchAgendas(); // Memuat data awal
+    _loadAgendas();
   }
 
-  void _fetchAgendas() {
-    setState(() {
-      _agendas = _agendaService.getActiveAgendas(_authToken);
-    });
+  Future<void> _loadAgendas() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _error = '';
+      });
+
+      final result = await _agendaService.getAgendaList();
+      
+      if (result['success']) {
+        setState(() {
+          _agendas = result['data'];
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = result['message'];
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    print(_agendas);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -39,13 +65,20 @@ class _ListProgressAgendaState extends State<ListProgressAgenda> {
         actions: [
           TextButton(
             onPressed: () {
-              // Navigasi ke halaman profil dosen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ProfileDosenScreen()),
+              );
             },
             child: const Text('PROFILE', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () {
-              // Navigasi ke halaman login
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
           ),
@@ -59,10 +92,9 @@ class _ListProgressAgendaState extends State<ListProgressAgenda> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                // Hanya tombol "Daftar Progress"
                 TextButton(
-                  onPressed: () {
-                    _fetchAgendas(); // Memuat ulang daftar agenda
-                  },
+                  onPressed: () {},
                   child: const Text(
                     'Daftar Progress Agenda',
                     style: TextStyle(
@@ -74,7 +106,10 @@ class _ListProgressAgendaState extends State<ListProgressAgenda> {
                 const SizedBox(width: 80),
                 TextButton(
                   onPressed: () {
-                    // Navigasi ke riwayat agenda
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RiwayatAgenda()),
+                    );
                   },
                   child: const Text(
                     'Riwayat Agenda',
@@ -101,43 +136,91 @@ class _ListProgressAgendaState extends State<ListProgressAgenda> {
                 filled: true,
                 fillColor: Colors.grey[200],
               ),
-              onChanged: (value) {
-                // Tambahkan fitur pencarian jika diperlukan
-              },
             ),
           ),
 
-          // Daftar Agenda
+          // List of Agenda Cards
           Expanded(
-            child: FutureBuilder<List<dynamic>>(
-              future: _agendas,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('Tidak ada agenda.'));
-                }
+            child: _isLoading 
+              ? const Center(child: CircularProgressIndicator())
+              : _error.isNotEmpty
+                ? Center(child: Text(_error))
+                : _agendas.isEmpty 
+                  ? ListView(
+                      children: const [
+                        AgendaCard(
+                          title: 'Seminar Akademik',
+                          subtitle: 'Basic Programmer',
+                          progress: 100,
+                          date: '20/4/2024',
+                          fileName: 'DOC-001.pdf',
+                          status: 'Selesai',
+                          statusColor: Colors.green,
+                        ),
+                        AgendaCard(
+                          title: 'Workshop Flutter',
+                          subtitle: 'Basic Flutter UI',
+                          progress: 50,
+                          date: '21/4/2024',
+                          fileName: 'DWSC-002.pdf',
+                          status: 'Sedang Berlangsung',
+                          statusColor: Colors.orange,
+                        ),
+                        AgendaCard(
+                          title: 'Seminar Akademik',
+                          subtitle: 'Basic Programmer',
+                          progress: 100,
+                          date: '20/4/2024',
+                          fileName: 'DOC-001.pdf',
+                          status: 'Selesai',
+                          statusColor: Colors.green,
+                        ),
+                      ],
+                    )
+                  : ListView.builder(
+                      itemCount: _agendas.length,
+                      itemBuilder: (context, index) {
+                        final agenda = _agendas[index];
+                        final namaKegiatan = agenda['nama_kegiatan_jurusan'] ?? 
+                                          agenda['nama_kegiatan_program_studi'] ?? 
+                                          'Tidak ada nama';
+                        
+                        String status = agenda['status_kegiatan'] ?? '';
+                        Color statusColor;
+                        
+                        switch (status.toLowerCase()) {
+                          case 'selesai':
+                            statusColor = Colors.green;
+                            break;
+                          case 'berlangsung':
+                            statusColor = Colors.blue;
+                            break;
+                          default:
+                            statusColor = Colors.orange;
+                            status = 'Sedang Berlangsung';
+                        }
 
-                final agendas = snapshot.data!;
-                return ListView.builder(
-                  itemCount: agendas.length,
-                  itemBuilder: (context, index) {
-                    final agenda = agendas[index];
-                    return AgendaCard(
-                      title: agenda['nama_kegiatan'],
-                      subtitle: agenda['deskripsi'],
-                      progress: 100, // Atur progress sesuai data Anda
-                      date: agenda['tanggal_mulai'],
-                      fileName: agenda['file_surat'] ?? 'Tidak ada file',
-                      status: 'Berlangsung',
-                      statusColor: Colors.orange,
-                    );
-                  },
-                );
-              },
-            ),
+                        String subtitle = agenda['agenda_aktif']['nama_agenda'] ?? '';
+                        if (subtitle.length > 25) {
+                          subtitle = '${subtitle.substring(0, 20)}...';
+                        }
+
+                        String filename = agenda['agenda_aktif']['file_surat_agenda'] ?? '';
+                        if (filename.length > 40) {
+                          filename = '${filename.substring(38)}...';
+                        }
+
+                        return AgendaCard(
+                          title: namaKegiatan,
+                          subtitle: subtitle,
+                          progress: agenda['agenda_aktif']['progres'] ?? 0,
+                          date: agenda['agenda_aktif']['tanggal_agenda'] ?? '',
+                          fileName: filename,
+                          status: status,
+                          statusColor: statusColor,
+                        );
+                      },
+                    ),
           ),
         ],
       ),

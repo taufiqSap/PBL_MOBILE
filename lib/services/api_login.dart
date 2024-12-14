@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiLogin {
-  static const String baseUrl = 'http://192.168.1.114:8000/api/v1/login'; 
+  static const String baseUrl = 'http://192.168.1.110:8000/api/v1/login'; 
 
-  Future<Map<String, dynamic>> login(String username, String password, String levelId) async {
+  Future<Map<String, dynamic>> login(String username, String password) async {
     final url = Uri.parse(baseUrl); 
 
     try {
@@ -15,7 +15,6 @@ class ApiLogin {
         body: jsonEncode({
           'username': username,
           'password': password,
-          'level_id': levelId,
         }),
       );
 

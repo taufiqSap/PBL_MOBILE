@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import '../screens/edit_profile_dosen_screen.dart';
-import '../screens/login_screen.dart';
-import '../widgets/footer.dart';
-import '../services/api_profile.dart';
+import 'package:mobile_pbl/screens/edit_profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
+import 'package:mobile_pbl/services/api_profile.dart';
 
 class ProfileDosenScreen extends StatefulWidget {
   const ProfileDosenScreen({super.key});

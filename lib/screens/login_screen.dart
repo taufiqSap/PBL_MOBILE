@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../screens/dashboard_dosen_screen.dart';
-import '../screens/dashboard_kaprodi_screen.dart';
-import '../services/api_login.dart';
-import '../widgets/footer_login.dart';
+import 'package:mobile_pbl/screens/dashboard_dosen_screen.dart';
+import 'package:mobile_pbl/screens/dashboard_kaprodi_screen.dart';
+import 'package:mobile_pbl/services/api_login.dart';
+import 'package:mobile_pbl/widgets/footer_login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,50 +16,52 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   String? _selectedLevel;
   bool _isLoading = false;
+  bool _isPasswordVisible = false; // State untuk mengatur visibilitas password
   final ApiLogin _apiService = ApiLogin();
 
   void _login() async {
-  if (_selectedLevel == null || _usernameController.text.isEmpty || _passwordController.text.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Semua field wajib diisi')),
-    );
-    return;
-  }
-
-  setState(() {
-    _isLoading = true;
-  });
-
-  final response = await _apiService.login(
-    _usernameController.text,
-    _passwordController.text,
-    _selectedLevel!,
-  );
-
-  setState(() {
-    _isLoading = false;
-  });
-
-  if (response['success']) {
-    // Redirect pengguna berdasarkan level
-    if (_selectedLevel == '3') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardDosenScreen()),
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Semua field wajib diisi')),
       );
-    } else if (_selectedLevel == '2') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardKaprodiScreen()),
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final response = await _apiService.login(
+      _usernameController.text,
+      _passwordController.text,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (response['success']) {
+      print(response['user']['level_id']);
+      // Redirect pengguna berdasarkan level
+      if (response['user']['level_id'] == 3) {
+        print('redirect to dosen');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardDosenScreen()),
+        );
+      } else if (response['user']['level_id'] == 2) {
+        print('redirect to kaprodi');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardKaprodiScreen()),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response['message'] ?? 'Login gagal')),
       );
     }
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(response['message'] ?? 'Login gagal')),
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,22 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Level',
-                  border: OutlineInputBorder(),
-                ),
-                items: const [
-                  DropdownMenuItem(value: '3', child: Text('Dosen')),
-                  DropdownMenuItem(value: '2', child: Text('Kaprodi')),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedLevel = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
               TextField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
@@ -118,10 +104,20 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: !_isPasswordVisible, 
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 20),

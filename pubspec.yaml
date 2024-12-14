@@ -10,15 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  file_picker: ^5.3.0
-  http: ^1.2.2
+  http: ^1.1.0
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.0.15
   dio: ^5.2.1
-  flutter_secure_storage: ^8.0.0
-
-
-    
+  intl: ^0.20.1
+  image_picker: ^1.1.2
+  open_file: ^3.5.10
+  path_provider: ^2.1.5
+  file_picker: ^8.1.4
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +32,6 @@ flutter:
     - assets/icons/progress.png
     - assets/icons/update.png
     - assets/icons/nonjti.png
+    - assets/icons/dasar.png
+    - assets/icons/polinema.png
+    - assets/icons/latar.png

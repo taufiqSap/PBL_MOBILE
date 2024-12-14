@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import '../screens/dashboard_dosen_screen.dart';
-import '../screens/edit_profile_dosen_screen.dart';
-import '../screens/list_progress_agenda_screen.dart';
-import '../screens/login_screen.dart';
-import '../screens/profile_dosen_screen.dart';
-import '../screens/riwayat_agenda.dart';
-import '../screens/update_progress.dart';
-import '../screens/dashboard_kaprodi_screen.dart';
-import '../screens/activity_list_screen.dart';
-import '../screens/download_document_screen.dart';
+import 'package:mobile_pbl/screens/dashboard_dosen_screen.dart';
+import 'package:mobile_pbl/screens/edit_profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/riwayat_agenda.dart';
+import 'package:mobile_pbl/screens/update_progress.dart';
+import 'package:mobile_pbl/screens/dashboard_kaprodi_screen.dart';
+import 'package:mobile_pbl/screens/activity_list_screen.dart';
+import 'package:mobile_pbl/screens/download_document_screen.dart';
+import 'package:mobile_pbl/screens/first_screen.dart';
 
-void main() async{
+
+void main() async {
   runApp(const MyApp());
 }
 
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: const WelcomeScreen(),
       routes: {
         '/dashboard_dosen': (context) => const DashboardDosenScreen(),
         '/edit_profile_dosen': (context) => const EditProfileDosenScreen(),
@@ -35,8 +37,9 @@ class MyApp extends StatelessWidget {
         '/update': (context) => const UpdateProgressPage(),
         '/riwayay_agenda': (context) => const RiwayatAgenda(),
         '/dashboard_kaprodi': (context) => const DashboardKaprodiScreen(),
-        '/activity' : (context) => const ActivityListScreen(),
+        '/activity': (context) => const ActivityListScreen(),
         '/download_document': (context) => const DownloadDocumentsScreen(),
+        '/first_screen': (context) => const WelcomeScreen(),
       },
     );
   }

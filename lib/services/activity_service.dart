@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/activity_model.dart';
 
-class AgendaService {
-  static const String baseUrl = 'http://192.168.1.110:8000/api/v1/dosen/dokumentasi/agenda';
+class ActivityService {
+  static const String baseUrl = 'http://192.168.1.110:8000/api/v1/kaprodi/mobile/surat-tugas';
 
-  Future<Map<String, dynamic>> getAgendaList() async {
+  Future<Map<String, dynamic>> getActivityList() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
@@ -29,10 +30,14 @@ class AgendaService {
         final Map<String, dynamic> data = json.decode(response.body);
         
         if (data['status'] == 'success') {
+          final List<ActivityModel> suratTugas = (data['data'] as List)
+              .map((item) => ActivityModel.fromJson(item))
+              .toList();
+
           return {
             'success': true,
             'message': data['message'],
-            'data': data['data']['agendas'],
+            'data': suratTugas
           };
         } else {
           return {

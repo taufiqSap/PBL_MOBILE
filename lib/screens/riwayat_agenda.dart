@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
 import 'package:mobile_pbl/services/agenda_service.dart';
-import '../widgets/footer.dart';
+import 'package:mobile_pbl/widgets/footer.dart';
 
 class RiwayatAgenda extends StatefulWidget {
   const RiwayatAgenda({super.key});
@@ -10,15 +13,43 @@ class RiwayatAgenda extends StatefulWidget {
 }
 
 class _RiwayatAgendaState extends State<RiwayatAgenda> {
-  final AgendaService _agendaService =
-      AgendaService(baseUrl: 'http://192.168.1.114:8000/api/riwayat-agenda');
-  late Future<List<dynamic>> _completedAgendas;
-  final String _authToken = 'YOUR_AUTH_TOKEN'; // Ganti dengan token aktual
+  final AgendaService _agendaService = AgendaService();
+  List<dynamic> _agendas = [];
+  bool _isLoading = true;
+  String _error = '';
 
   @override
   void initState() {
     super.initState();
-    _completedAgendas = _agendaService.getCompletedAgendas(_authToken);
+    _loadAgendas();
+  }
+
+  Future<void> _loadAgendas() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _error = '';
+      });
+
+      final result = await _agendaService.getAgendaList();
+
+      if (result['success']) {
+        setState(() {
+          _agendas = result['data'];
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _error = result['message'];
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -33,13 +64,20 @@ class _RiwayatAgendaState extends State<RiwayatAgenda> {
         actions: [
           TextButton(
             onPressed: () {
-              // Navigasi ke halaman profil
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ProfileDosenScreen()),
+              );
             },
             child: const Text('PROFILE', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () {
-              // Navigasi ke halaman login
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
             },
             child: const Text('LOGOUT', style: TextStyle(color: Colors.white)),
           ),
@@ -47,14 +85,19 @@ class _RiwayatAgendaState extends State<RiwayatAgenda> {
       ),
       body: Column(
         children: [
+          // Tab selector
           Container(
             color: Colors.blue[200],
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                // Hanya tombol "Daftar Progress"
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ListProgressAgenda()));
                   },
                   child: const Text(
                     'Daftar Progress Agenda',
@@ -78,34 +121,66 @@ class _RiwayatAgendaState extends State<RiwayatAgenda> {
               ],
             ),
           ),
-          Expanded(
-            child: FutureBuilder<List<dynamic>>(
-              future: _completedAgendas,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('Tidak ada agenda selesai.'));
-                }
 
-                final agendas = snapshot.data!;
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  itemCount: agendas.length,
-                  itemBuilder: (context, index) {
-                    final agenda = agendas[index];
-                    return buildKegiatanCard(
-                      agenda['nama_kegiatan'],
-                      agenda['tanggal_mulai'],
-                      agenda['tanggal_selesai'],
-                      agenda['pic'] ?? 'Tidak ada PIC',
-                    );
-                  },
-                );
-              },
+          // Search Bar
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Cari Riwayat',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                fillColor: Colors.grey[200],
+              ),
             ),
+          ),
+
+          // List of Agenda Cards
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _error.isNotEmpty
+                    ? Center(child: Text(_error))
+                    : _agendas.isEmpty
+                        ? const Center(child: Text("No agendas found"))
+                        : ListView.builder(
+                            itemCount: _agendas.length,
+                            itemBuilder: (context, index) {
+                              final agenda = _agendas[index];
+                              final namaKegiatan =
+                                  agenda['nama_kegiatan_jurusan'] ??
+                                      agenda['nama_kegiatan_program_studi'] ??
+                                      'Tidak ada nama';
+
+                              String pic = agenda['user']['nama_lengkap'] ?? '';
+                              if (pic.length > 20) {
+                                pic = '${pic.substring(0, 20)}...';
+                              }
+
+                              String subtitle =
+                                  agenda['agenda_aktif']['nama_agenda'] ?? '';
+                              if (subtitle.length > 25) {
+                                subtitle = '${subtitle.substring(0, 20)}...';
+                              }
+
+                              String filename = agenda['agenda_aktif']
+                                      ['file_surat_agenda'] ??
+                                  '';
+                              if (filename.length > 40) {
+                                filename = '${filename.substring(38)}...';
+                              }
+
+                              return buildKegiatanCard(
+                                  namaKegiatan,
+                                  agenda['tanggal_mulai'] ?? '',
+                                  agenda['tanggal_selesai'] ?? '',
+                                  agenda['agenda_aktif']['progress'] ?? 0,
+                                  pic);
+                            },
+                          ),
           ),
         ],
       ),
@@ -113,8 +188,9 @@ class _RiwayatAgendaState extends State<RiwayatAgenda> {
     );
   }
 
-  Widget buildKegiatanCard(
-      String title, String startDate, String endDate, String pic) {
+  // Existing buildKegiatanCard method
+  Widget buildKegiatanCard(String title, String startDate, String endDate,
+      int progress, String pic) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
       padding: const EdgeInsets.all(16.0),
