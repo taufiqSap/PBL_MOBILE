@@ -5,7 +5,6 @@ import 'package:mobile_pbl/screens/dashboard_kaprodi_screen.dart';
 import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
 import 'package:mobile_pbl/screens/update_progress.dart';
 import 'package:mobile_pbl/services/api_profile.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key});

@@ -32,7 +32,7 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Selamat Datang di',
+                  'Welcome To',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -41,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 1),
                 Text(
-                  'Sistem Manajemen SDM',
+                  'System Management SDM',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w900,
@@ -50,7 +50,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'Politeknik Negeri Malang',
+                  'Polytechnic State of Malang ',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,

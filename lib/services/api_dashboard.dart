@@ -10,8 +10,8 @@ class ApiDashboard {
     final role = profile['data']['level_nama'];
     
     return role.toLowerCase() == 'dosen' 
-      ? 'http://192.168.1.110:8000/api/v1/dosen/dashboard' 
-      : 'http://192.168.1.110:8000/api/v1/kaprodi/dashboard';
+      ? 'http://192.168.1.108:8000/api/v1/dosen/dashboard' 
+      : 'http://192.168.1.108:8000/api/v1/kaprodi/dashboard';
   }
 
   Future<Map<String, dynamic>> fetchDashboardData() async {

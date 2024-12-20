@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateProgressService {
   static const String baseUrl =
-      'http://192.168.1.110:8000/api/v1/dosen/dokumentasi';
+      'http://192.168.1.108:8000/api/v1/dosen/dokumentasi';
 
   Future<Map<String, dynamic>> getKegiatanList() async {
     final prefs = await SharedPreferences.getInstance();

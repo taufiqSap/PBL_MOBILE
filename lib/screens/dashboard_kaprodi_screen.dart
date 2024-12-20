@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_pbl/services/api_dashboard.dart';
+import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
+import 'package:mobile_pbl/screens/login_screen.dart';
 import '../widgets/footer.dart';
 
 class DashboardKaprodiScreen extends StatefulWidget {
@@ -51,7 +53,10 @@ class _DashboardKaprodiScreenState extends State<DashboardKaprodiScreen> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/profile'); // Navigasi ke Profil
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileDosenScreen()),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
@@ -64,7 +69,10 @@ class _DashboardKaprodiScreenState extends State<DashboardKaprodiScreen> {
           const SizedBox(width: 10),
           ElevatedButton(
             onPressed: () {
-              // Tambahkan logika logout di sini
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,

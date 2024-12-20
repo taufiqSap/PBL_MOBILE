@@ -14,6 +14,11 @@ class ActivityModel {
   final String createdAt;
   final String updatedAt;
   final List<Jabatan> jabatan;
+  final Kegiatan? kegiatan;
+  final String? nomerSurat;
+  final String? judulSurat;
+  final String? fileSurat;
+  final String? tanggalSurat;
 
   ActivityModel({
     this.kegiatanJurusanId,
@@ -31,6 +36,11 @@ class ActivityModel {
     required this.createdAt,
     required this.updatedAt,
     required this.jabatan,
+    required this.kegiatan,
+    this.nomerSurat,
+    this.judulSurat,
+    this.fileSurat,
+    this.tanggalSurat
   });
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) {
@@ -56,9 +66,68 @@ class ActivityModel {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       jabatan: jabatanList,
+      kegiatan: json['kegiatan'] != null ? Kegiatan.fromJson(json['kegiatan']) : null,
+      nomerSurat: json['nomer_surat'],
+      judulSurat: json['judul_surat'],
+      fileSurat: json['file_surat'],
+      tanggalSurat: json['tanggal_surat']
     );
   }
 }
+
+class Kegiatan {
+  final int? kegiatanProgramStudiId;
+  final int? kegiatanJurusanId;
+  final int suratId;
+  final int userId;
+  final String namaKegiatan;
+  final String deskripsiKegiatan;
+  final String lokasiKegiatan;
+  final String tanggalMulai;
+  final String tanggalSelesai;
+  final String statusKegiatan;
+  final String penyelenggara;
+  final String? suratPenugasan;
+  final String createdAt;
+  final String updatedAt;
+
+  Kegiatan({
+    this.kegiatanProgramStudiId,
+    this.kegiatanJurusanId,
+    required this.suratId,
+    required this.userId,
+    required this.namaKegiatan,
+    required this.deskripsiKegiatan,
+    required this.lokasiKegiatan,
+    required this.tanggalMulai,
+    required this.tanggalSelesai,
+    required this.statusKegiatan,
+    required this.penyelenggara,
+    this.suratPenugasan,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Kegiatan.fromJson(Map<String, dynamic> json) {
+    return Kegiatan(
+      kegiatanProgramStudiId: json['kegiatan_program_studi_id'],
+      kegiatanJurusanId: json['kegiatan_jurusan_id'],
+      suratId: json['surat_id'],
+      userId: json['user_id'],
+      namaKegiatan: json['nama_kegiatan_program_studi'] ?? json['nama_kegiatan_jurusan'],
+      deskripsiKegiatan: json['deskripsi_kegiatan'],
+      lokasiKegiatan: json['lokasi_kegiatan'],
+      tanggalMulai: json['tanggal_mulai'],
+      tanggalSelesai: json['tanggal_selesai'],
+      statusKegiatan: json['status_kegiatan'],
+      penyelenggara: json['penyelenggara'],
+      suratPenugasan: json['surat_penugasan'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+    );
+  }
+}
+
 
 class Jabatan {
   final int jabatanId;

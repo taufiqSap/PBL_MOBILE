@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_pbl/screens/list_progress_agenda_screen.dart';
 import 'package:mobile_pbl/screens/login_screen.dart';
 import 'package:mobile_pbl/screens/profile_dosen_screen.dart';
 import 'package:mobile_pbl/services/agenda_service.dart';
@@ -93,12 +92,7 @@ class _RiwayatAgendaState extends State<RiwayatAgenda> {
               children: [
                 // Hanya tombol "Daftar Progress"
                 TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ListProgressAgenda()));
-                  },
+                  onPressed: () {},
                   child: const Text(
                     'Daftar Progress Agenda',
                     style: TextStyle(
@@ -160,25 +154,27 @@ class _RiwayatAgendaState extends State<RiwayatAgenda> {
                                 pic = '${pic.substring(0, 20)}...';
                               }
 
-                              String subtitle =
-                                  agenda['agenda_aktif']['nama_agenda'] ?? '';
+                              String subtitle = agenda['agenda_aktif']
+                                          ['nama_agenda'] ??
+                                      '';
                               if (subtitle.length > 25) {
                                 subtitle = '${subtitle.substring(0, 20)}...';
                               }
 
-                              String filename = agenda['agenda_aktif']
-                                      ['file_surat_agenda'] ??
-                                  '';
+                              String filename =
+                                  agenda['agenda_aktif']['file_surat_agenda'] ??
+                                      '';
                               if (filename.length > 40) {
                                 filename = '${filename.substring(38)}...';
                               }
 
                               return buildKegiatanCard(
-                                  namaKegiatan,
-                                  agenda['tanggal_mulai'] ?? '',
-                                  agenda['tanggal_selesai'] ?? '',
-                                  agenda['agenda_aktif']['progress'] ?? 0,
-                                  pic);
+                                namaKegiatan,
+                                agenda['tanggal_mulai'] ?? '',
+                                agenda['tanggal_selesai'] ?? '',
+                                agenda['agenda_aktif']['progress'] ?? 0,
+                                pic
+                              );
                             },
                           ),
           ),
@@ -189,8 +185,8 @@ class _RiwayatAgendaState extends State<RiwayatAgenda> {
   }
 
   // Existing buildKegiatanCard method
-  Widget buildKegiatanCard(String title, String startDate, String endDate,
-      int progress, String pic) {
+  Widget buildKegiatanCard(
+      String title, String startDate, String endDate, int progress, String pic) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10.0),
       padding: const EdgeInsets.all(16.0),

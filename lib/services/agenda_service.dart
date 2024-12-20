@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AgendaService {
-  static const String baseUrl = 'http://192.168.1.110:8000/api/v1/dosen/dokumentasi/agenda';
+  static const String baseUrl = 'http://192.168.1.108:8000/api/v1/dosen/dokumentasi/agenda';
 
   Future<Map<String, dynamic>> getAgendaList() async {
     final prefs = await SharedPreferences.getInstance();

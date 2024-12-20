@@ -38,17 +38,16 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
       });
 
       if (_profilData != null && _profilData!['foto'] != null) {
-        String imageBase64 = _profilData!['foto'];
-        // Remove the Data URL prefix if it exists
-        if (imageBase64.contains(',')) {
-          imageBase64 = imageBase64.split(',')[1];
-        }
-        final decodedBytes = base64Decode(imageBase64);
-        final image = MemoryImage(decodedBytes);
-        setState(() {
-          _profilData?['foto'] = image;
-        });
-      }
+  String imageBase64 = _profilData!['foto'];
+  if (imageBase64.contains(',')) {
+    imageBase64 = imageBase64.split(',')[1];
+  }
+  final decodedBytes = base64Decode(imageBase64);
+  setState(() {
+    _profilData?['foto'] = MemoryImage(decodedBytes);
+  });
+}
+
       print('Profil data: $_profilData');
       print('Agenda data: $_agendaData');
       print('Statistik data: $_statistikData');
@@ -149,13 +148,18 @@ class _DashboardDosenScreenState extends State<DashboardDosenScreen> {
                       child: Row(
                         children: [
                           CircleAvatar(
-                            radius: 40,
-                            backgroundImage: _profilData?['foto'], // Provide a default image here
-                            backgroundColor: Colors.brown,
-                            child: _profilData?['foto'] == null
-                                ? const Text('Foto')
-                                : null,
-                          ),
+  radius: 40,
+  backgroundImage: (_profilData != null && _profilData!['foto'] != null)
+      ? (_profilData!['foto'] is ImageProvider
+          ? _profilData!['foto'] // Jika sudah berupa ImageProvider
+          : NetworkImage(_profilData!['foto'])) // Jika berupa URL
+      : const AssetImage('assets/images/default.jpg'), // Gambar default
+  backgroundColor: Colors.brown,
+  child: (_profilData == null || _profilData!['foto'] == null)
+      ? const Text('Foto')
+      : null,
+),
+
                           const SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

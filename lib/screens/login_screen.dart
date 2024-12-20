@@ -14,10 +14,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  String? _selectedLevel;
   bool _isLoading = false;
-  bool _isPasswordVisible = false; // State untuk mengatur visibilitas password
+  bool _obscureText = true; // untuk mengontrol visibilitas password
   final ApiLogin _apiService = ApiLogin();
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   void _login() async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
@@ -104,19 +109,15 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
-                obscureText: !_isPasswordVisible, 
+                obscureText: _obscureText,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
+                    onPressed: _togglePasswordVisibility,
                   ),
                 ),
               ),

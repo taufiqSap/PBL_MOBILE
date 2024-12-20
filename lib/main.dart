@@ -11,8 +11,7 @@ import 'package:mobile_pbl/screens/activity_list_screen.dart';
 import 'package:mobile_pbl/screens/download_document_screen.dart';
 import 'package:mobile_pbl/screens/first_screen.dart';
 
-
-void main() async {
+void main() async{
   runApp(const MyApp());
 }
 
@@ -37,9 +36,8 @@ class MyApp extends StatelessWidget {
         '/update': (context) => const UpdateProgressPage(),
         '/riwayay_agenda': (context) => const RiwayatAgenda(),
         '/dashboard_kaprodi': (context) => const DashboardKaprodiScreen(),
-        '/activity': (context) => const ActivityListScreen(),
-        '/download_document': (context) => const DownloadDocumentsScreen(),
-        '/first_screen': (context) => const WelcomeScreen(),
+        '/activity' : (context) => const ActivityListScreen(),
+        '/first_screen' : (context) => const WelcomeScreen(),
       },
     );
   }

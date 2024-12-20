@@ -19,6 +19,7 @@ dependencies:
   open_file: ^3.5.10
   path_provider: ^2.1.5
   file_picker: ^8.1.4
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -33,5 +34,4 @@ flutter:
     - assets/icons/update.png
     - assets/icons/nonjti.png
     - assets/icons/dasar.png
-    - assets/icons/polinema.png
-    - assets/icons/latar.png
+    - assets/default.jpg

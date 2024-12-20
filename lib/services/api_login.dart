@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiLogin {
-  static const String baseUrl = 'http://192.168.1.110:8000/api/v1/login'; 
+  static const String baseUrl = 'http://192.168.1.108:8000/api/v1/login'; 
 
   Future<Map<String, dynamic>> login(String username, String password) async {
     final url = Uri.parse(baseUrl); 
@@ -47,7 +47,11 @@ class ApiLogin {
       } else {
         return {
           'success': false,
-          'message': 'Server error: ${response.statusCode}'
+          'message': response.statusCode == 422
+              ? (jsonDecode(response.body)['errors'] as Map<String, dynamic>)
+                  .values
+                  .join(', ')
+              : 'Server error: ${response.statusCode}'
         };
       }
     } catch (e) {

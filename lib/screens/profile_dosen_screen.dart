@@ -97,7 +97,8 @@ class _ProfileDosenScreenState extends State<ProfileDosenScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const LoginScreen()),
+                                      builder: (context) =>
+                                          const LoginScreen()),
                                 );
                               },
                               style: TextButton.styleFrom(
@@ -119,24 +120,25 @@ class _ProfileDosenScreenState extends State<ProfileDosenScreen> {
                         child: Column(
                           children: [
                             CircleAvatar(
-  radius: 50,
-  backgroundColor: Colors.brown.shade300,
-  backgroundImage: _profileData != null &&
-          _profileData!['foto'] != null &&
-          _profileData!['foto'].startsWith('data:image')
-      ? MemoryImage(
-          base64Decode(
-              _profileData!['foto'].split(',').last)) // Hapus header Base64
-      : null,
-  child: _profileData?['foto'] == null
-      ? const Icon(
-          Icons.photo,
-          size: 50,
-          color: Colors.white,
-        )
-      : null,
-),
-
+                              radius: 50,
+                              backgroundColor: Colors.brown.shade300,
+                              backgroundImage: _profileData != null &&
+                                      _profileData!['foto'] != null &&
+                                      _profileData!['foto']
+                                          .startsWith('data:image')
+                                  ? MemoryImage(base64Decode(
+                                      _profileData!['foto']
+                                          .split(',')
+                                          .last)) // Hapus header Base64
+                                  : null,
+                              child: _profileData?['foto'] == null
+                                  ? const Icon(
+                                      Icons.photo,
+                                      size: 50,
+                                      color: Colors.white,
+                                    )
+                                  : null,
+                            ),
                             const SizedBox(height: 8),
                             Text(
                               '${_profileData?['gelar_depan'] ?? ''} ${_profileData?['nama_lengkap'] ?? ''} ${_profileData?['gelar_belakang'] ?? ''}',
